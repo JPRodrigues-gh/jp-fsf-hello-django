@@ -65,6 +65,30 @@ class TestView(TestCase):
         #  back to the home page. Use assertRedirects to confirm
         #  that it redirects back to slash.
         self.assertRedirects(response, '/')
+        # # get new item from the database passing it the item.id
+        # added_item = response.objects.get(id=item.id)
+        # # verify that the item was updated
+        # self.assertEqual(added_item.name, 'Test adding new item')
+
+    def test_can_edit_item(self):
+        """ test that we can edit an item """
+
+        # To test the HTTP responses of the views we can use a built-in HTTP
+        #  client that comes with the Django testing framework
+
+        # create an item to use in this test
+        item = Item.objects.create(name='Test editing an item')
+        # get the edit_item page providing the URL and
+        #  the id of the item added/created above
+        response = self.client.post(f'/edit/{item.id}', {'name': 'Edited name'})
+        # If the item is added successfully the view should redirect
+        #  back to the home page. Use assertRedirects to confirm
+        #  that it redirects back to slash.
+        self.assertRedirects(response, '/')
+        # get new item from the database passing it the item.id
+        updated_item = Item.objects.get(id=item.id)
+        # verify that the item was updated
+        self.assertEqual(updated_item.name, 'Edited name')
 
     def test_can_delete_item(self):
         """ test that we can delete an item """
